@@ -11,6 +11,7 @@ import Welcome from "../components/Welcome";
 import Picker from "emoji-picker-react";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import useOutSideAlerter from "../components/useOutSideAlerter";
+import {respondTo} from "../utils/_variable";
 
 const Chat = () => {
   const token = useSelector(tokenSlct);
@@ -58,6 +59,9 @@ const MessagesBlockStyled = styled.div`
 `;
 
 const Form = styled.div`
+  ${respondTo.mobile`
+    display:none;
+  `}
   margin: 0 2rem;
   display: flex;
   align-items: center;
