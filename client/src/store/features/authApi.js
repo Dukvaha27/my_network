@@ -23,7 +23,7 @@ export const authApi = createApi({
       query: (token) => ({
         method: "GET",
         headers: {
-          authorization:token.accessToken
+          authorization: token?.accessToken,
         },
         url: "/users",
       }),
@@ -31,14 +31,12 @@ export const authApi = createApi({
   }),
 });
 
-export const { useRegisterMutation, useGetUsersQuery } =
-  authApi;
+export const { useRegisterMutation, useGetUsersQuery } = authApi;
 
 export const login = createAsyncThunk(
   "token/add",
   async ({ email, password }, { rejectWithValue, dispatch }) => {
     try {
-
       const res = await fetch(`${base_url}/login`, {
         method: "POST",
         body: JSON.stringify({ email, password }),
@@ -54,11 +52,12 @@ export const login = createAsyncThunk(
 const slice = createSlice({
   name: "token",
   initialState: {
-    token: JSON.parse(localStorage.getItem('user')),
+    token: JSON.parse(localStorage.getItem("user")),
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      localStorage.setItem('user', JSON.stringify(action.payload))
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      state.token = action.payload;
     });
   },
 });

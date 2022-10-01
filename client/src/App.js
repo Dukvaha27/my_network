@@ -4,17 +4,35 @@ import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import Header from "./components/header";
 
+const pages = [
+    {
+        path:"/log",
+        key:1,
+        element:<Login/>
+    },
+    {
+        path:"/register",
+        key:2,
+        element:<Register/>
+    },
+    {
+        path:"/chat",
+        key:3,
+        element:<Chat/>
+    },
+]
+
 function App() {
-  return (
-    <div className="App">
-     <Routes>
-         <Route path={'/'} element={<Header />}/>
-         <Route path={'/log'} element={<Login/>}/>
-         <Route path={'/register'} element={<Register/>}/>
-         <Route path={'/chat'} element={<Chat/>}/>
-     </Routes>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Header />
+            <Routes>
+                {pages.map((elem) => (
+                    <Route key={elem.key} {...elem}/>
+                ))}
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
