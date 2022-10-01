@@ -11,6 +11,8 @@ import logo from "../../assets/header_logo.svg";
 import avatar from "../../assets/Rectangle.svg";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { tokenSlct } from "../../store/features/authApi";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -106,6 +108,7 @@ const StyledOtherBlock = styled.div`
 `;
 
 const Header = () => {
+  const { user } = useSelector(tokenSlct);
   return (
     <StyledHeader>
       <StyledHeaderBlock>
@@ -181,7 +184,7 @@ const Header = () => {
         <div>
           <div>
             <span>
-              <b>D. KARGAEV</b>
+              <b>{user.name}</b>
             </span>
             <StyledAbout>YOU</StyledAbout>
           </div>
