@@ -5,13 +5,14 @@ import { useSelector } from "react-redux";
 import { tokenSlct } from "../../store/features/authApi";
 
 export default function Welcome({ isMessages, selectUser }) {
-  const { user = '' } = useSelector(tokenSlct);
+  const token = useSelector(tokenSlct);
 
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-      setUsername(user.name)
-  },[user])
+    setUsername(token?.user.name);
+  }, [token]);
+
   const EmptyMessagesBlock = <div>Здесть пока ничего нет...</div>;
 
   const SelectUser = (
@@ -24,11 +25,7 @@ export default function Welcome({ isMessages, selectUser }) {
     </>
   );
 
-  return (
-    <Container>
-      {selectUser ? EmptyMessagesBlock : SelectUser}
-    </Container>
-  );
+  return <Container>{selectUser ? EmptyMessagesBlock : SelectUser}</Container>;
 }
 
 const Container = styled.div`
