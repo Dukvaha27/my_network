@@ -13,6 +13,7 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { tokenSlct } from "../../store/features/authApi";
+import BasicMenu from "./Dashboard";
 
 const StyledHeader = styled.div`
   display: flex;
@@ -101,14 +102,11 @@ const StyledOtherBlock = styled.div`
   & > span {
     font-size: 20px;
   }
-
-  & > h4 {
-    margin: 0;
-  }
 `;
 
 const Header = () => {
   const { user } = useSelector(tokenSlct);
+
   return (
     <StyledHeader>
       <StyledHeaderBlock>
@@ -197,10 +195,7 @@ const Header = () => {
         </div>
       </StyledAboutBlock>
       <StyledOtherBlock>
-        <span>
-          <BiDotsHorizontalRounded />
-        </span>
-        <h4>OTHER</h4>
+        <BasicMenu />
       </StyledOtherBlock>
     </StyledHeader>
   );
