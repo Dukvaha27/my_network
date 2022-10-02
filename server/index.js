@@ -39,6 +39,8 @@ app.ws("/", (ws, req, res) => {
       case "connection":
         connectionHandler(ws, msg);
         break;
+      case "readMsg":
+        readMsgHandler(ws,msg)
     }
   });
 });
@@ -50,8 +52,17 @@ const broadCastHandler = (ws, msg) => {
     }
   });
 };
+
+const readMsgHandler = (ws, msg) => {
+  aWss.clients.forEach((client) => {
+    if (client.id === msg.to) {
+      client.send(JSON.stringify(msg));
+    }
+  })
+}
 const connectionHandler = (ws, msg) => {
   ws.id = msg.id;
-  ws.to = msg.to
+  ws.to = msg.to;
+  ws.from = msg.from;
   broadCastHandler(ws, msg);
 };

@@ -10,10 +10,14 @@ const messageSchema = new Schema(
       ref: "User",
       required: true,
     },
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = model("Messages", messageSchema)
+module.exports = model("Messages", messageSchema);

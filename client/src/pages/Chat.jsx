@@ -5,6 +5,12 @@ import ChatBlock from "../components/ChatBlock";
 import styled from "styled-components";
 import UserList from "../components/ChatBlock/UserList";
 
+const Container = styled.div`
+  display: flex;
+  width: 1180px;
+  margin: auto;
+`;
+
 const Chat = () => {
   const token = useSelector(tokenSlct);
   const [to, setTo] = useState("");
@@ -16,7 +22,7 @@ const Chat = () => {
   } = useGetUsersQuery(token, { skip: !token });
 
   return (
-    <div style={{ display: "flex" }}>
+    <Container>
       {!isLoading && (
         <UserListContainerStyled>
           {users
@@ -33,7 +39,7 @@ const Chat = () => {
         </UserListContainerStyled>
       )}
       <ChatBlock from={token?.user.id} to={to} users={users} />
-    </div>
+    </Container>
   );
 };
 
