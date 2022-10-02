@@ -104,7 +104,7 @@ const StyledOtherBlock = styled.div`
 `;
 
 const Header = () => {
-  const { user } = useSelector(tokenSlct);
+  const token = useSelector(tokenSlct);
 
   return (
     <StyledHeader>
@@ -183,7 +183,7 @@ const Header = () => {
         <div>
           <div>
             <span>
-              <b>{user.name}</b>
+              <b>{token?.user.name}</b>
             </span>
             <StyledAbout>YOU</StyledAbout>
           </div>

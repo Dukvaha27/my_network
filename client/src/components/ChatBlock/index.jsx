@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import {
   useAddMessagesMutation,
   useGetMessagesQuery,
+  useReadMessageMutation,
 } from "../../store/features/messageApi";
 import useOutSideAlerter from "../useOutSideAlerter";
 import Welcome from "../Welcome";
@@ -9,7 +10,7 @@ import { BsEmojiSmileFill } from "react-icons/bs";
 import Picker from "emoji-picker-react";
 import styled from "styled-components";
 import { respondTo } from "../../utils/_variable";
-import { Telegram } from "@mui/icons-material";
+import { Done, DoneAll, Telegram } from "@mui/icons-material";
 import { Divider } from "../divider";
 
 const ws = new WebSocket("ws://localhost:4000");
@@ -17,12 +18,24 @@ const ws = new WebSocket("ws://localhost:4000");
 const ChatBlock = ({ from, to, users }) => {
   const [text, setText] = useState("");
   const { data } = useGetMessagesQuery({ from, to });
+
+  const [readMessage] = useReadMessageMutation();
+
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (messages?.length) {
+      const last_msg = messages[messages?.length - 1];
+      if (!last_msg.fromSelf) {
+        readMessage({ to: from, text: last_msg.id });
+      }
+    }
+  }, [messages]);
 
   const ref = useRef();
   useEffect(() => {
     setMessages(data);
-  }, [data]);
+  }, [data, from, to]);
 
   const user = users?.find(({ _id }) => _id === to);
   const [sendMessage] = useAddMessagesMutation();
@@ -55,11 +68,30 @@ const ChatBlock = ({ from, to, users }) => {
       setText("");
     }
   };
+
+  useEffect(() => {
+    if (to) {
+      const req = { method: "readMsg", id: from, to };
+      if (text) req.text = text;
+      ws.send(JSON.stringify(req));
+    }
+  }, [to]);
+
   ws.onmessage = (ev) => {
     const data = JSON.parse(ev.data);
 
     if (data.id === to) {
       setMessages([...messages, { fromSelf: false, text: data.text }]);
+    }
+    if (data.to === from) {
+      setMessages([
+        ...messages,
+        {
+          text: data.text,
+          isRead: true,
+          fromSelf: data.fromSelf,
+        },
+      ]);
     }
   };
 
@@ -72,7 +104,16 @@ const ChatBlock = ({ from, to, users }) => {
         ) : (
           messages?.map((message, idx) => (
             <RowStyled key={idx} from={message.fromSelf}>
-              <span>{message.text}</span>
+              {message.text && (
+                <span>
+                  {message.text}
+                  <div>
+                    13-30
+                    {message?.fromSelf &&
+                      (message.isRead ? <DoneAll /> : <Done />)}
+                  </div>
+                </span>
+              )}
             </RowStyled>
           ))
         )}
@@ -100,7 +141,7 @@ const ChatBlock = ({ from, to, users }) => {
 
 const Container = styled.div`
   width: calc(100vw - 4rem);
-  height: calc(100vh - 3rem);
+  height: calc(100vh - 8.5rem);
 `;
 
 const MessagesBlockStyled = styled.div`
@@ -120,6 +161,7 @@ const Form = styled.div`
   input {
     width: calc(100% - 3rem);
     outline: none;
+    background-color: inherit;
     border: none;
     ::placeholder {
       color: gray;
@@ -147,6 +189,19 @@ const RowStyled = styled.div`
     max-width: 50%;
     border: ${({ from }) => from && "1px solid black"};
     border-radius: 10px;
+    div {
+      font-size: 10px;
+      color: ${({ theme }) => theme.dark};
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      margin-top: 0.5rem;
+      svg {
+        margin-left: 0.15rem;
+        width: 10px !important;
+        height: 10px !important;
+      }
+    }
   }
   display: flex;
   justify-content: ${({ from }) => (from ? "end" : "start")};
