@@ -9,7 +9,6 @@ import { FiArrowUpRight, FiBriefcase, FiSearch } from "react-icons/fi";
 import { AiOutlineBell } from "react-icons/ai";
 import logo from "../../assets/header_logo.svg";
 import avatar from "../../assets/Rectangle.svg";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { tokenSlct } from "../../store/features/authApi";
@@ -109,9 +108,11 @@ const Header = () => {
 
   return (
     <StyledHeader>
-      <StyledHeaderBlock>
-        <img src={logo} alt="" />
-      </StyledHeaderBlock>
+      <NavLink to={"/"}>
+        <StyledHeaderBlock>
+          <img src={logo} alt="" />
+        </StyledHeaderBlock>
+      </NavLink>
       <StyledHeaderBlock>
         <NavLink
           to="/feed"
