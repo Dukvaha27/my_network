@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  useAddMessagesMutation,
+  useAddMessagesMutation, useGetMessagesAllQuery,
   useGetMessagesQuery,
   useReadMessageMutation,
 } from "../../store/features/messageApi";
@@ -12,27 +12,26 @@ import styled from "styled-components";
 import { respondTo } from "../../utils/_variable";
 import { Done, DoneAll, Telegram } from "@mui/icons-material";
 import { Divider } from "../divider";
-
-const ws = new WebSocket("ws://localhost:4000");
+import useMessageState from "../../store/slice/message/useMessageState";
+import { ws } from "../../utils/api";
 
 const ChatBlock = ({ from, to, users }) => {
   const [text, setText] = useState("");
   const { data } = useGetMessagesQuery({ from, to });
+  const { data: allMessages } = useGetMessagesAllQuery();
 
   const [readMessage] = useReadMessageMutation();
 
-  const [messages, setMessages] = useState([]);
+  const { messages, setMessages, getLastMsg } = useMessageState();
 
   useEffect(() => {
     if (messages?.length) {
-      const last_msg = messages[messages?.length - 1];
-      if (!last_msg.fromSelf) {
-        readMessage({ to: from, text: last_msg.id });
-      }
+      readMessage({ to: from, from: to });
     }
   }, [messages]);
 
   const ref = useRef();
+
   useEffect(() => {
     setMessages(data);
   }, [data, from, to]);
@@ -63,6 +62,7 @@ const ChatBlock = ({ from, to, users }) => {
         })
       );
 
+      getLastMsg({ messages:allMessages, to: from });
       sendMessage({ from, to, text });
       setMessages([...messages, { fromSelf: true, text }]);
       setText("");
@@ -80,18 +80,21 @@ const ChatBlock = ({ from, to, users }) => {
   ws.onmessage = (ev) => {
     const data = JSON.parse(ev.data);
 
+    if(data.text){
+      getLastMsg({messages:[{fromSelf:false, text:data.text, toId:data.id}], to:data.id})
+    }
     if (data.id === to) {
       setMessages([...messages, { fromSelf: false, text: data.text }]);
     }
     if (data.to === from) {
-      setMessages([
-        ...messages,
-        {
-          text: data.text,
-          isRead: true,
-          fromSelf: data.fromSelf,
-        },
-      ]);
+      const map = messages?.map((message) => {
+        if (message.isRead) {
+          return message;
+        } else {
+          return { ...message, isRead: true };
+        }
+      });
+      setMessages(map);
     }
   };
 

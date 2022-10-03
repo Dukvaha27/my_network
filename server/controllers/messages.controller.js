@@ -12,6 +12,7 @@ module.exports.messagesController = {
 
     const projectedMessages = messages.map((msg) => {
       return {
+        toId:to,
         id: msg._id,
         fromSelf: msg.sender.toString() === from,
         text: msg.text,
@@ -19,6 +20,15 @@ module.exports.messagesController = {
       };
     });
     res.json(projectedMessages);
+  },
+  getMessagesAll:async(req, res) => {
+    try  {
+      const messages = await Messages.find();
+
+      return res.json(messages);
+    }catch (e) {
+      return res.json({message:'ошибка при получении всех сообщений', error:e.toString()})
+    }
   },
   addMessage: async (req, res) => {
     try {
@@ -37,29 +47,25 @@ module.exports.messagesController = {
   },
   readMessage: async (req, res) => {
     try {
-      const { to, text } = req.body;
+      const { from, to } = req.body; // from : id отправителя - to : id собеседника
 
+      // находим переписку from - to
       const messages = await Messages.find({
         users: {
-          $all: [to],
+          $all: [from, to],
         },
       });
 
-      const messagesObj = messages.reduce((acc, next) => {
-        if (!acc[next._id]) {
-          acc[next._id] = next;
+      // изменяем включи смс-ок isRead
+      for (const message of messages) {
+        if (!message.isRead && message.sender.toLocaleString() === from) {
+          await Messages.findByIdAndUpdate(message._id, {
+            isRead: true,
+          });
         }
-        return acc;
-      }, {});
-
-      if (messagesObj?.[text]) {
-        messagesObj[text].isRead = to !== messagesObj[text].sender.toString();
-        await Messages.findByIdAndUpdate(messagesObj[text], {
-          isRead: to !== messagesObj[text].sender.toString(),
-        });
       }
 
-      return res.json(messagesObj);
+      return res.json("Отметить прочитанные сообщения!");
     } catch (e) {
       return res.json({ message: "Error on read messages", error: String(e) });
     }
