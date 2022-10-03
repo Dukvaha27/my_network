@@ -20,17 +20,26 @@ export const messageApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags:['messages']
+      invalidatesTags: ["messages"],
     }),
-    readMessage:build.mutation({
-      query:({to,text}) => ({
-        method:"POST",
-        url:`/readMsg/`,
-        body:{to, text}
+    readMessage: build.mutation({
+      query: ({ to, from }) => ({
+        method: "POST",
+        url: `/readMsg/`,
+        body: { to, from },
       }),
-      invalidatesTags:['messages']
+      invalidatesTags: ["messages"],
+    }),
+    getMessagesAll: build.query({
+      query: () => "/getMsgAll",
+      providesTags: ["messages"],
     }),
   }),
 });
 
-export const { useGetMessagesQuery, useAddMessagesMutation, useReadMessageMutation } = messageApi;
+export const {
+  useGetMessagesQuery,
+  useAddMessagesMutation,
+  useReadMessageMutation,
+  useGetMessagesAllQuery,
+} = messageApi;

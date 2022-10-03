@@ -1,21 +1,21 @@
 import React, { memo, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useGetMessagesQuery } from "../../store/features/messageApi";
+import useMessageState from "../../store/slice/message/useMessageState";
 
 const UserList = ({ name, setTo, from, to }) => {
   const { data: messages } = useGetMessagesQuery({ from, to });
-  const [lastMessage, setLastMessage] = useState({});
+  const { last_message, getLastMsg } = useMessageState()
 
   useEffect(() => {
-    const last = messages?.[messages?.length - 1];
-    setLastMessage(last);
-  }, [messages]);
+    if(messages?.length) getLastMsg({messages, to})
+  },[messages]);
 
   return (
     <ListStyled onClick={() => setTo(to)}>
       {name}
       <LastMessageStyled>
-        {lastMessage?.fromSelf ? "Your" : name}:<span>{lastMessage?.text}</span>
+        {last_message[to]?.fromSelf ? "Your" : name}:<span>{last_message[to]?.text}</span>
       </LastMessageStyled>
     </ListStyled>
   );
