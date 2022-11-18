@@ -1,6 +1,6 @@
-import React from "react";
-import NewPost from "../components/layouts/NewPost";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import NewPost from '../components/layouts/NewPost';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -8,12 +8,12 @@ const StyledContainer = styled.div`
   padding: 40px 130px;
 `;
 
-const Main = () => {
+function Main() {
   return (
     <StyledContainer>
       <NewPost />
     </StyledContainer>
   );
-};
+}
 
 export default Main;

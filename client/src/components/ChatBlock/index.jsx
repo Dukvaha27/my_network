@@ -1,23 +1,24 @@
-import React, { memo, useEffect, useRef, useState } from "react";
-import {
-  useAddMessagesMutation, useGetMessagesAllQuery,
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { BsEmojiSmileFill } from 'react-icons/bs';
+import Picker from 'emoji-picker-react';
+import styled from 'styled-components';
+import { Done, DoneAll, Telegram } from '@mui/icons-material';
+import propTypes from 'prop-types';
+import { useAddMessagesMutation, useGetMessagesAllQuery,
   useGetMessagesQuery,
-  useReadMessageMutation,
-} from "../../store/features/messageApi";
-import useOutSideAlerter from "../useOutSideAlerter";
-import Welcome from "../Welcome";
-import { BsEmojiSmileFill } from "react-icons/bs";
-import Picker from "emoji-picker-react";
-import styled from "styled-components";
-import { respondTo } from "../../utils/_variable";
-import { Done, DoneAll, Telegram } from "@mui/icons-material";
-import { Divider } from "../divider";
-import useMessageState from "../../store/slice/message/useMessageState";
-import { ws } from "../../utils/api";
+  useReadMessageMutation } from '../../store/features/messageApi';
+import useOutSideAlerter from '../useOutSideAlerter';
+import Welcome from '../Welcome';
+import { respondTo } from '../../utils/_variable';
+import { Divider } from '../divider';
+import useMessageState from '../../store/slice/message/useMessageState';
+import { ws } from '../../utils/api';
 
-const ChatBlock = ({ from, to, users }) => {
-  const [text, setText] = useState("");
-  const { data } = useGetMessagesQuery({ from, to });
+function ChatBlock({ from, to, users }) {
+  const [text, setText] = useState('');
+  const { data } = useGetMessagesQuery({
+    from, to,
+  });
   const { data: allMessages } = useGetMessagesAllQuery();
 
   const [readMessage] = useReadMessageMutation();
@@ -26,7 +27,9 @@ const ChatBlock = ({ from, to, users }) => {
 
   useEffect(() => {
     if (messages?.length) {
-      readMessage({ to: from, from: to });
+      readMessage({
+        to: from, from: to,
+      });
     }
   }, [messages]);
 
@@ -47,52 +50,70 @@ const ChatBlock = ({ from, to, users }) => {
   };
   ws.onopen = () => {
     ws.send(
-      JSON.stringify({ method: "connection", id: from, to, user: user?.name })
+      JSON.stringify({
+        method: 'connection', id: from, to, user: user?.name,
+      }),
     );
   };
   const sendMessageHandler = () => {
     if (text && from && to) {
       ws.send(
         JSON.stringify({
-          method: "connection",
+          method: 'connection',
           id: from,
           to,
           text,
           user: user?.name,
-        })
+        }),
       );
 
-      getLastMsg({ messages:allMessages, to: from });
-      sendMessage({ from, to, text });
-      setMessages([...messages, { fromSelf: true, text }]);
-      setText("");
+      getLastMsg({
+        messages: allMessages, to: from,
+      });
+      sendMessage({
+        from, to, text,
+      });
+      setMessages([...messages, {
+        fromSelf: true, text,
+      }]);
+      setText('');
     }
   };
 
   useEffect(() => {
     if (to) {
-      const req = { method: "readMsg", id: from, to };
+      const req = {
+        method: 'readMsg', id: from, to,
+      };
       if (text) req.text = text;
       ws.send(JSON.stringify(req));
     }
   }, [to]);
 
   ws.onmessage = (ev) => {
-    const data = JSON.parse(ev.data);
+    const dataMsg = JSON.parse(ev.data);
 
-    if(data.text){
-      getLastMsg({messages:[{fromSelf:false, text:data.text, toId:data.id}], to:data.id})
+    if (dataMsg.text) {
+      getLastMsg({
+        messages: [{
+          fromSelf: false, text: dataMsg.text, toId: dataMsg.id,
+        }],
+        to: dataMsg.id,
+      });
     }
-    if (data.id === to) {
-      setMessages([...messages, { fromSelf: false, text: data.text }]);
+    if (dataMsg.id === to) {
+      setMessages([...messages, {
+        fromSelf: false, text: dataMsg.text,
+      }]);
     }
-    if (data.to === from) {
+    if (dataMsg.to === from) {
       const map = messages?.map((message) => {
         if (message.isRead) {
           return message;
-        } else {
-          return { ...message, isRead: true };
         }
+        return {
+          ...message, isRead: true,
+        };
       });
       setMessages(map);
     }
@@ -106,14 +127,15 @@ const ChatBlock = ({ from, to, users }) => {
           <Welcome isMessages={!messages?.length} selectUser={to} />
         ) : (
           messages?.map((message, idx) => (
+            // eslint-disable-next-line react/no-array-index-key
             <RowStyled key={idx} from={message.fromSelf}>
               {message.text && (
                 <span>
                   {message.text}
                   <div>
                     13-30
-                    {message?.fromSelf &&
-                      (message.isRead ? <DoneAll /> : <Done />)}
+                    {message?.fromSelf
+                      && (message.isRead ? <DoneAll /> : <Done />)}
                   </div>
                 </span>
               )}
@@ -124,23 +146,23 @@ const ChatBlock = ({ from, to, users }) => {
       <hr />
       <Form>
         <input
-          placeholder={"Type a message here"}
+          placeholder="Type a message here"
           value={text}
           onChange={({ target }) => setText(target.value)}
         />
         <EmojiBlock ref={ref}>
           <BsEmojiSmileFill
-            color={"gray"}
+            color="gray"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           />
           {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
         </EmojiBlock>
-        <Divider vertical height={"1.5rem"} />
+        <Divider vertical height="1.5rem" />
         <SendIconStyled onClick={sendMessageHandler} />
       </Form>
     </Container>
   );
-};
+}
 
 const Container = styled.div`
   width: calc(100vw - 4rem);
@@ -180,17 +202,16 @@ const SendIconStyled = styled(Telegram)`
 
 const RowStyled = styled.div`
   span {
-    text-align: ${({ from }) => (from ? "end" : "start")};
+    text-align: ${({ from }) => (from ? 'end' : 'start')};
     background: rgb(0, 44, 245);
-    background: ${({ from }) =>
-      !from
-        ? "linear-gradient(90deg, rgba(0,44,245,0.8113839285714286) 0%, rgba(0,239,255,1) 100%)"
-        : "transparent"};
+    background: ${({ from }) => (!from
+        ? 'linear-gradient(90deg, rgba(0,44,245,0.8113839285714286) 0%, rgba(0,239,255,1) 100%)'
+        : 'transparent')};
     margin: 0.5rem 0;
     padding: 0.5rem 1rem;
     width: fit-content;
     max-width: 50%;
-    border: ${({ from }) => from && "1px solid black"};
+    border: ${({ from }) => from && '1px solid black'};
     border-radius: 10px;
     div {
       font-size: 10px;
@@ -207,8 +228,8 @@ const RowStyled = styled.div`
     }
   }
   display: flex;
-  justify-content: ${({ from }) => (from ? "end" : "start")};
-  color: ${({ from }) => (from ? "red" : "white")};
+  justify-content: ${({ from }) => (from ? 'end' : 'start')};
+  color: ${({ from }) => (from ? 'red' : 'white')};
 `;
 
 const EmojiBlock = styled.div`
@@ -250,5 +271,11 @@ const EmojiBlock = styled.div`
     }
   }
 `;
+
+ChatBlock.propTypes = {
+  from: propTypes.string.isRequired,
+  to: propTypes.string.isRequired,
+  users: propTypes.instanceOf(Array).isRequired,
+};
 
 export default memo(ChatBlock);

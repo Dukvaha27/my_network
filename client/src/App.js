@@ -1,28 +1,28 @@
-import { Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Chat from "./pages/Chat";
-import Header from "./components/header";
-import Main from "./pages/Main";
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Chat from './pages/Chat';
+import Header from './components/header';
+import Main from './pages/Main';
 
 const pages = [
   {
-    path: "/log",
+    path: '/log',
     key: 1,
     element: <Login />,
   },
   {
-    path: "/register",
+    path: '/register',
     key: 2,
     element: <Register />,
   },
   {
-    path: "/chat",
+    path: '/chat',
     key: 3,
     element: <Chat />,
   },
   {
-    path: "/",
+    path: '/',
     key: 4,
     element: <Main />,
   },

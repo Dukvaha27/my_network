@@ -1,17 +1,17 @@
-import React, {useEffect} from 'react';
+import { useEffect } from 'react';
 
 const useOutSideAlerter = (ref, handler) => {
-    useEffect(() => {
-        const handleClick = (event) => {
-            if(!ref.current.contains(event.target)){
-                handler()
-            }
-        };
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (!ref.current.contains(event.target)) {
+        handler();
+      }
+    };
 
-        document.addEventListener('mousedown', handleClick);
+    document.addEventListener('mousedown', handleClick);
 
-        return () => document.removeEventListener('mousedown', handleClick)
-    },[ref,handler])
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [ref, handler]);
 };
 
 export default useOutSideAlerter;

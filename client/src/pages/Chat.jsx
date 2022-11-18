@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { tokenSlct, useGetUsersQuery } from "../store/features/authApi";
-import { useSelector } from "react-redux";
-import ChatBlock from "../components/ChatBlock";
-import styled from "styled-components";
-import UserList from "../components/ChatBlock/UserList";
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { tokenSlct, useGetUsersQuery } from '../store/features/authApi';
+import ChatBlock from '../components/ChatBlock';
+import UserList from '../components/ChatBlock/UserList';
 
 const Container = styled.div`
   display: flex;
@@ -11,15 +11,15 @@ const Container = styled.div`
   margin: auto;
 `;
 
-const Chat = () => {
+function Chat() {
   const token = useSelector(tokenSlct);
-  const [to, setTo] = useState("");
+  const [to, setTo] = useState('');
   const {
     data: users,
-    error,
     isLoading,
-    refetch,
-  } = useGetUsersQuery(token, { skip: !token });
+  } = useGetUsersQuery(token, {
+    skip: !token,
+  });
 
   return (
     <Container>
@@ -41,7 +41,7 @@ const Chat = () => {
       <ChatBlock from={token?.user.id} to={to} users={users} />
     </Container>
   );
-};
+}
 
 const UserListContainerStyled = styled.div`
   width: 30%;

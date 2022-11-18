@@ -1,10 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { FiPaperclip } from "react-icons/fi";
-import { BsImages } from "react-icons/bs";
-import { MdSend, MdVideoLibrary } from "react-icons/md";
-import Button from "@mui/material/Button";
-import { RiSendPlaneFill } from "react-icons/ri";
+import React from 'react';
+import styled from 'styled-components';
+import { FiPaperclip } from 'react-icons/fi';
+import { BsImages } from 'react-icons/bs';
+import { MdSend, MdVideoLibrary } from 'react-icons/md';
 
 const StyledContainer = styled.div`
   width: 850px;
@@ -64,7 +62,7 @@ const StyledButton = styled.button`
   border: none;
 `;
 
-const NewPost = () => {
+function NewPost() {
   return (
     <StyledContainer>
       <h5>NEW POST</h5>
@@ -90,6 +88,6 @@ const NewPost = () => {
       </div>
     </StyledContainer>
   );
-};
+}
 
 export default NewPost;
