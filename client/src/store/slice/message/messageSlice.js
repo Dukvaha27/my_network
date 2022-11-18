@@ -1,10 +1,11 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 const messageSlice = createSlice({
-  name: "messages",
+  name: 'messages',
   initialState: {
     messages: [],
-    last_message: {},
+    last_message: {
+    },
   },
   reducers: {
     _setMessages: (state, action) => {
@@ -25,12 +26,12 @@ const msgSelect = (state) => state.messages;
 
 export const messageSelector = createSelector(
   msgSelect,
-  (state) => state.messages
+  (state) => state.messages,
 );
 
 export const lastMessage = createSelector(
   msgSelect,
-  (state) => state.last_message
+  (state) => state.last_message,
 );
 
 export default reducer;

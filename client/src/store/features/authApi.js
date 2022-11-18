@@ -1,31 +1,31 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { base_url } from "../../utils/api";
-import {
-  createAsyncThunk,
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createAsyncThunk,
   createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+  createSlice } from '@reduxjs/toolkit';
+import { base_url } from '../../utils/api';
 
 export const authApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  reducerPath: "authPath",
-  tagTypes: ["auth"],
+  baseQuery: fetchBaseQuery({
+    baseUrl: base_url,
+  }),
+  reducerPath: 'authPath',
+  tagTypes: ['auth'],
   endpoints: (build) => ({
     register: build.mutation({
       query: (body) => ({
-        url: "/auth",
-        method: "POST",
+        url: '/auth',
+        method: 'POST',
         body,
       }),
-      invalidatesTags: ["auth"],
+      invalidatesTags: ['auth'],
     }),
     getUsers: build.query({
       query: (token) => ({
-        method: "GET",
+        method: 'GET',
         headers: {
           authorization: token?.accessToken,
         },
-        url: "/users",
+        url: '/users',
       }),
     }),
   }),
@@ -34,29 +34,33 @@ export const authApi = createApi({
 export const { useRegisterMutation, useGetUsersQuery } = authApi;
 
 export const login = createAsyncThunk(
-  "token/add",
-  async ({ email, password }, { rejectWithValue, dispatch }) => {
+  'token/add',
+  async ({ email, password }, { rejectWithValue }) => {
     try {
       const res = await fetch(`${base_url}/login`, {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        body: JSON.stringify({
+          email, password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       return await res.json();
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 const slice = createSlice({
-  name: "token",
+  name: 'token',
   initialState: {
-    token: JSON.parse(localStorage.getItem("user")),
+    token: JSON.parse(localStorage.getItem('user')),
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem('user', JSON.stringify(action.payload));
       state.token = action.payload;
     });
   },

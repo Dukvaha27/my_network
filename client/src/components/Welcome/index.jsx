@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Robot from "../../assets/robot.gif";
-import { useSelector } from "react-redux";
-import { tokenSlct } from "../../store/features/authApi";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import propTypes from 'prop-types';
+import Robot from '../../assets/robot.gif';
+import { tokenSlct } from '../../store/features/authApi';
 
-export default function Welcome({ isMessages, selectUser }) {
+export default function Welcome({ selectUser }) {
   const token = useSelector(tokenSlct);
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     setUsername(token?.user.name);
@@ -19,7 +20,12 @@ export default function Welcome({ isMessages, selectUser }) {
     <>
       <img src={Robot} alt="" />
       <h1>
-        Welcome, <span>{username}!</span>
+        Welcome,
+        {' '}
+        <span>
+          {username}
+          !
+        </span>
       </h1>
       <h3>Please select a chat to Start messaging.</h3>
     </>
@@ -27,6 +33,10 @@ export default function Welcome({ isMessages, selectUser }) {
 
   return <Container>{selectUser ? EmptyMessagesBlock : SelectUser}</Container>;
 }
+
+Welcome.propTypes = {
+  selectUser: propTypes.string.isRequired,
+};
 
 const Container = styled.div`
   position: absolute;

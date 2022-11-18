@@ -1,18 +1,16 @@
-import React from "react";
-import styled from "styled-components";
-import {
-  MdOutlineChatBubbleOutline,
+import React from 'react';
+import styled from 'styled-components';
+import { MdOutlineChatBubbleOutline,
   MdOutlinePeopleAlt,
-  MdRssFeed,
-} from "react-icons/md";
-import { FiArrowUpRight, FiBriefcase, FiSearch } from "react-icons/fi";
-import { AiOutlineBell } from "react-icons/ai";
-import logo from "../../assets/header_logo.svg";
-import avatar from "../../assets/Rectangle.svg";
-import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { tokenSlct } from "../../store/features/authApi";
-import BasicMenu from "./Dashboard";
+  MdRssFeed } from 'react-icons/md';
+import { FiArrowUpRight, FiBriefcase, FiSearch } from 'react-icons/fi';
+import { AiOutlineBell } from 'react-icons/ai';
+import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import logo from '../../assets/header_logo.svg';
+import avatar from '../../assets/Rectangle.svg';
+import { tokenSlct } from '../../store/features/authApi';
+import BasicMenu from './Dashboard';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -103,12 +101,12 @@ const StyledOtherBlock = styled.div`
   }
 `;
 
-const Header = () => {
+function Header() {
   const token = useSelector(tokenSlct);
 
   return (
     <StyledHeader>
-      <NavLink to={"/"}>
+      <NavLink to="/">
         <StyledHeaderBlock>
           <img src={logo} alt="" />
         </StyledHeaderBlock>
@@ -116,9 +114,7 @@ const Header = () => {
       <StyledHeaderBlock>
         <NavLink
           to="/feed"
-          className={({ isActive }) =>
-            isActive ? "active_navlink" : "nav_link"
-          }
+          className={({ isActive }) => (isActive ? 'active_navlink' : 'nav_link')}
         >
           <div>
             <MdRssFeed />
@@ -127,9 +123,7 @@ const Header = () => {
         </NavLink>
         <NavLink
           to="/network"
-          className={({ isActive }) =>
-            isActive ? "active_navlink" : "nav_link"
-          }
+          className={({ isActive }) => (isActive ? 'active_navlink' : 'nav_link')}
         >
           <div>
             <MdOutlinePeopleAlt />
@@ -138,9 +132,7 @@ const Header = () => {
         </NavLink>
         <NavLink
           to="/jobs"
-          className={({ isActive }) =>
-            isActive ? "active_navlink" : "nav_link"
-          }
+          className={({ isActive }) => (isActive ? 'active_navlink' : 'nav_link')}
         >
           <div>
             <FiBriefcase />
@@ -149,9 +141,7 @@ const Header = () => {
         </NavLink>
         <NavLink
           to="/chat"
-          className={({ isActive }) =>
-            isActive ? "active_navlink" : "nav_link"
-          }
+          className={({ isActive }) => (isActive ? 'active_navlink' : 'nav_link')}
         >
           <div>
             <MdOutlineChatBubbleOutline />
@@ -160,9 +150,7 @@ const Header = () => {
         </NavLink>
         <NavLink
           to="/notices"
-          className={({ isActive }) =>
-            isActive ? "active_navlink" : "nav_link"
-          }
+          className={({ isActive }) => (isActive ? 'active_navlink' : 'nav_link')}
         >
           <div>
             <AiOutlineBell />
@@ -190,7 +178,9 @@ const Header = () => {
           <div>
             <span> 367 views today</span>
             <StyledViews>
-              +32 <FiArrowUpRight />
+              +32
+              {' '}
+              <FiArrowUpRight />
             </StyledViews>
           </div>
         </div>
@@ -200,6 +190,6 @@ const Header = () => {
       </StyledOtherBlock>
     </StyledHeader>
   );
-};
+}
 
 export default Header;
