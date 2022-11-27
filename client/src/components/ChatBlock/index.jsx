@@ -7,7 +7,7 @@ import propTypes from 'prop-types';
 import { useAddMessagesMutation, useGetMessagesAllQuery,
   useGetMessagesQuery,
   useReadMessageMutation } from '../../store/features/messageApi';
-import useOutSideAlerter from '../useOutSideAlerter';
+import useOutSideAlerter from '../../hooks/useOutSideAlerter';
 import Welcome from '../Welcome';
 import { respondTo } from '../../utils/_variable';
 import { Divider } from '../divider';
